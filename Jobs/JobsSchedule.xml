@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+	<processing-directives>
+		<overwrite-existing-data>true</overwrite-existing-data>
+	</processing-directives>
+	<schedule>
+		<job>
+			<name>EnviarCorreoAutomatico</name>
+			<group>AlertasAutomaticas</group>
+			<description>Envía un correo automático a un cliente en una hora dada</description>
+			<!-- En job-type debemos de brindar dos argumentos. El primero de ellos indica el nombre de la clase que implementa la interfaz IJob, 
+			mientras que el segundo indica el namespace al cual pertenece dicha clase. -->
+			<job-type>Jobs.EnviarEmail, Jobs</job-type>
+			<!-- Si la propiedad durable es false, para el scheduler el trabajo existirá únicamente mientras exista un trigger asociado a el. 
+			Cuando el trigger se complete, el trabajo se eliminaría del scheduler. -->
+			<durable>true</durable>
+			<!-- La propiedad recover indica si el trabajo de debe de registrar de nuevo cuando ocurra un apagado forzoso (como el crasheo del proceso). -->
+			<recover>true</recover>
+		</job>
+		<trigger>
+			<simple>
+				<name>EnviarCorreoCadaCinco</name>
+				<group>TriggersAlertasAutomaticas</group>
+				<description>Envía un correo cada cinco minutos</description>
+				<!-- En job-name debemos especificar el NOMBRE EXACTO del trabajo al que se relacionará el trigger. -->
+				<job-name>EnviarCorreoAutomatico</job-name>
+				<job-group>AlertasAutomaticas</job-group>
+				<!-- Deja en manos de la librería el comportamiento de un trigger después de que la ejecución del mismo fallara. -->
+				<misfire-instruction>SmartPolicy</misfire-instruction>
+				<!-- Indica cuantas veces se puede ejecutar un trigger antes de ser desechado. Si el valor es -1, entonces el trigger nunca será desechado.-->
+				<repeat-count>-1</repeat-count>
+				<!-- Especifica el intervalo de tiempo entre ejecuciones del trigger. El valor se encuentra en milisegundos. -->
+				<repeat-interval>15000</repeat-interval>
+			</simple>
+		</trigger>
+	</schedule>
+</job-scheduling-data>
